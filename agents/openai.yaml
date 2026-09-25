@@ -1,0 +1,4 @@
+interface:
+  display_name: "UJP e-Faktura"
+  short_description: "Plan and implement UJP e-invoicing"
+  default_prompt: "Use $e-faktura to plan and implement UJP e-invoicing for this app."
