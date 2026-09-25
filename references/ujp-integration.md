@@ -18,6 +18,18 @@ The test OpenAPI served an OpenAPI 3.1 document with company, server-time, catal
 
 At that check, the test API exposed `/api/v1/server-time`, `/api/v1/companies/{tax_number}`, `/api/v1/document-statuses`, `/api/v1/doc-type-x-tax-indicator/list`, and catalogs for payment types and reject, correction, and void reasons. The `/api/v1/documents/` family exposed sales and purchase ID lists, payloads, current statuses, changes, and PDFs, plus purchase accept/reject. The tested signed sales receiver was `https://efakturatest.ujp.gov.mk/JSONReceiver/api/v1/sales-invoices/send`. These are discovery cues; verify paths, methods, schemas, and availability against the live spec before use.
 
+## Contract checklist before coding
+
+For each operation actually in scope, write a project-local contract table linked to the current UJP source. Resolve differences among the wiki, PDF, examples, OpenAPI, and live catalogs before implementation. Capture:
+
+- Base URL and environment; HTTP method and path; required identity, document-type, certificate, and content headers; certificate serial representation; request timestamp and time zone.
+- Exact JWS protected header, signing algorithm, signed body, encoding/serialization, and verification method. Include certificate access and expiry behavior for the app's deployment OS.
+- Required and optional request/response fields, types, length limits, formats, nullability, and examples for company lookup, catalogs, submission, sales/purchase lookup, status, PDF, accept/reject, correction, and storno as selected.
+- Document numbering and stable identity, EUID and prior-document references, supported document type/tax-indicator combinations, VAT registration rules, item units, discounts, payment codes, currency, precision, line/tax/final total calculations, and rounding differences from the local app.
+- Success, definite rejection, duplicate, timeout, and ambiguous response shapes; current status and reason catalogs; lookup needed to reconcile an uncertain send; privileges required by each route.
+
+Do not infer a missing field or rule from a successful example alone. If the current UJP source is unreachable or contradicts another source on a material field, mark that part of the plan blocked and preserve the conflicting evidence instead of inventing a wire format.
+
 ## Connection and signing
 
 - Configure taxpayer EDB, EUJP ID, test endpoint, and an approved signing certificate separately from production configuration. Validate the certificate's validity, private-key *availability* to the running process, and UJP registration/privileges without exporting its private key.
